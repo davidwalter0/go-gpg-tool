@@ -1,5 +1,16 @@
 # go-gpg-tool: renamed from quickpgp 
 
+Set the following:
+```
+    KEY_USE_NAME    : the user name may be human readable - including spaces
+    KEY_USE_COMMENT : the key use comment
+    KEY_USE_EMAIL   : the full email address
+```
+TODO
+
+- look at adding a keyring (example 1)[https://gist.github.com/stuart-warren/93750a142d3de4e8fdd2] (example 2)[https://gist.github.com/eliquious/9e96017f47d9bd43cdf9]
+
+
 `go-gpg-tool` is a wonderful method of doing common pgp operations in a mere
 nothingth of a second, without all that tedious mucking about with keyrings.
 

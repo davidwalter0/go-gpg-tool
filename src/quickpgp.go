@@ -31,8 +31,11 @@ func usage(binname string) {
 
 ` + binname + ` genkey <keyfilebase>
     Generates key pair in <keyfilebase>.{key,pub}.asc
-    Uses envvars LOGNAME, COMMENT, and HOSTNAME to set the identity as
-       "LOGNAME (COMMENT) <LOGNAME@HOSTNAME>"
+    Uses the following envvars to set the identity as
+       "KEY_USE_NAME (KEY_USE_COMMENT) <KEY_USE_EMAIL>"
+    KEY_USE_NAME    : the user name may be human readable - including spaces
+    KEY_USE_COMMENT : the key use comment
+    KEY_USE_EMAIL   : the full email address
 
 ` + binname + ` identify <keyfile>
     Display details of the given <keyfile>

@@ -3,7 +3,6 @@ package quickpgp
 import (
 	"crypto"
 	"errors"
-	"fmt"
 	"os"
 
 	"golang.org/x/crypto/openpgp"
@@ -13,9 +12,9 @@ import (
 )
 
 func entityData() (name string, comment string, email string) {
-	name = os.Getenv("LOGNAME")
-	comment = os.Getenv("COMMENT")
-	email = fmt.Sprintf("%s@%s", name, os.Getenv("HOSTNAME"))
+	name = os.Getenv("KEY_USE_NAME")
+	comment = os.Getenv("KEY_USE_COMMENT")
+	email = os.Getenv("KEY_USE_EMAIL")
 	return
 }
 
