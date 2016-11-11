@@ -1,7 +1,7 @@
-quickpgp: $(shell find src -type f -name "*.go")
-	GOPATH=$(shell pwd ) go build -v src/quickpgp.go
+go-gpg-tool: $(shell find src -type f -name "*.go")
+	GOPATH=$(shell pwd ) go build -v src/go-gpg-tool.go
 
 clean:
-	rm -v quickpgp
+	rm -v go-gpg-tool
 
 .PHONY: clean

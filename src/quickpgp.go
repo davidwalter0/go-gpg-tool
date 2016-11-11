@@ -71,7 +71,7 @@ func main() {
 		if len(os.Args) == 4 {
 			ifile := os.Args[2]
 			keyfile := os.Args[3]
-			printError(quickpgp.Sign(keyfile, readPassword, ifile, ifile+".sig.asc"))
+			printError(quickpgp.Sign(keyfile, readPassword, ifile, ifile+".asc"))
 		}
 	case "encryptsign":
 		if len(os.Args) == 5 {
@@ -91,7 +91,7 @@ func main() {
 		if len(os.Args) == 4 {
 			ifile := os.Args[2]
 			keyfile := os.Args[3]
-			printError(quickpgp.Verify(keyfile, ifile, ifile+".sig.asc"))
+			printError(quickpgp.Verify(keyfile, ifile, ifile+".asc"))
 		}
 	case "genkey":
 		if len(os.Args) == 3 {
