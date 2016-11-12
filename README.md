@@ -82,7 +82,7 @@ This will output either an error message or `Good signature from "<identity>"` o
 
 Shows information about the key.  The format is similar to the output of `gpg --list-[secret-]keys`.
 ```
-$ gpg-sign-tool indentify matrix.key.asc
+$ gpg-sign-tool identify matrix.key.asc
 matrix.key.asc
 --------------
 sec   2048 /DF2FE68C75DF3663 1999-03-31T00:00:01Z

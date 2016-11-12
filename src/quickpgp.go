@@ -4,10 +4,22 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 
 	"hostutils"
 	"quickpgp"
 )
+
+var Build string  // from the build ldflag options
+var Commit string // from the build ldflag options
+var Tag string    // from the build ldflag options
+
+func version() {
+	array := strings.Split(os.Args[0], "/")
+	me := array[len(array)-1]
+	fmt.Println(me, "Tag:", Tag, "Build:", Build, "Commit:", Commit)
+	os.Exit(0)
+}
 
 func usage(binname string) {
 	fmt.Println("Usage: " + binname + " <operation> <arg> ...")
@@ -41,6 +53,9 @@ func usage(binname string) {
     Display details of the given <keyfile>
 
 ` + binname + ` license
+    View the license
+
+` + binname + ` version
     View the license
 `)
 }
@@ -110,6 +125,8 @@ func main() {
 			keyfile := os.Args[2]
 			printError(quickpgp.IdentifyKey(keyfile))
 		}
+	case "version":
+		version()
 	}
 	usage(os.Args[0])
 	os.Exit(1)
