@@ -1,4 +1,4 @@
-# go-gpg-tool: renamed from quickpgp 
+# gpg-sign-tool: renamed from quickpgp 
 
 Set the following:
 ```
@@ -10,11 +10,13 @@ TODO
 
 - look at adding a keyring (example 1)[https://gist.github.com/stuart-warren/93750a142d3de4e8fdd2] (example 2)[https://gist.github.com/eliquious/9e96017f47d9bd43cdf9]
 
+```
+https://gist.github.com/jyap808/8250067
+https://gist.github.com/jyap808/8250124
+```
 
-`go-gpg-tool` is a wonderful method of doing common pgp operations in a mere
-nothingth of a second, without all that tedious mucking about with keyrings.
-
-But It is mainly a demonstraton of using golang's openpgp package.
+`gpg-sign-tool` is a simple tool for executing common subset of key
+operations. It demonstrates some golang openpgp operations.
 
 ## Purpose
 
@@ -26,7 +28,7 @@ And, of course, you want your end of this to be automated.  You want the key to 
 
 Maintaining a PGP "home directory" for keyring storage is slightly too complicated.  Some combination of options always seems to make a `~/.gnupg` no matter what you do.  And if this exists, sometimes keyrings in it get search/included even if you don't want them to be.  There *is* a way to use `gpg` in a batch and "immediate" mode, but it's not straight forward.  So you end up with stuff like [gpg-tmp](https://github.com/Keith-S-Thompson/gpg-tmp).  Which mostly works, except when it doesn't.  And then there's having to remember to ASCII armor your keys.  And backing up the imported keyrings.
 
-`go-gpg-tool` gets rid of all that.  Sometimes, you just want to sign a file with a key you have right there.
+`gpg-sign-tool` gets rid of all that.  Sometimes, you just want to sign a file with a key you have right there.
 
 ## Compliation
 
@@ -41,7 +43,7 @@ $ make
 This is not strictly necessary, since you can also use files containing keys extracted from a regular opengpg/pgp keyring.
 
 ```
-$ go-gpg-tool genkey bedrock
+$ gpg-sign-tool genkey bedrock
 $ ls -l bedrock*
 -rw------- 1 fred flintstones  3457 Jan  1  1961 bedrock.key.asc
 -rw-rw-r-- 1 fred flintstones  1692 Aug  1  1961 bedrock.pub.asc
@@ -54,7 +56,7 @@ By default, it will use `LOGNAME`, `COMMENT` (usually empty), and `HOSTNAME` fro
 $ LOGNAME=neo \
   COMMENT="follow the white rabbit" \
   HOSTNAME="nebuchadnezzar.example.com" \
-  go-gpg-tool genkey matrix
+  gpg-sign-tool genkey matrix
 $ ls -l matrix*
 -rw------- 1 neo theone        3457 Mar 31  1999 matrix.key.asc
 -rw-rw-r-- 1 neo theone        1692 Mar 31  1999 matrix.pub.asc
@@ -63,15 +65,15 @@ $ ls -l matrix*
 ### Sign a file
 
 ```
-$ go-gpg-tool sign file bedrock.key.asc
+$ gpg-sign-tool sign file bedrock.key.asc
 ```
 
-Produces `file.sig.asc`, containing the detached signature.
+Produces `file.asc`, containing the detached signature.
 
 ### Verify a signature
 
 ```
-$ go-gpg-tool verify file bedrock.pub.asc
+$ gpg-sign-tool verify file bedrock.pub.asc
 ```
 This will output either an error message or `Good signature from "<identity>"` on stderr.  The exit code will be 0 if the signature is good.
 
@@ -80,7 +82,7 @@ This will output either an error message or `Good signature from "<identity>"` o
 
 Shows information about the key.  The format is similar to the output of `gpg --list-[secret-]keys`.
 ```
-$ go-gpg-tool indentify matrix.key.asc
+$ gpg-sign-tool indentify matrix.key.asc
 matrix.key.asc
 --------------
 sec   2048 /DF2FE68C75DF3663 1999-03-31T00:00:01Z
@@ -91,7 +93,7 @@ pub   2048 /DF2FE68C75DF3663 1999-03-31T00:00:01Z
 uid                          neo (follow the white rabbit) <neo@nebuchadnezzar.example.com>
 sub   2048 /831D828900A7CB9A 1999-03-31T00:00:01Z
 
-$ go-gpg-tool identify matrix.pub.asc 
+$ gpg-sign-tool identify matrix.pub.asc 
 matrix.pub.asc
 --------------
 pub   2048 /DF2FE68C75DF3663 1999-03-31T00:00:01Z
