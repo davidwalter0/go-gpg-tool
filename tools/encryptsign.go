@@ -13,12 +13,12 @@ import (
 func EncryptSign(privateKeyFileName string, readPass readPasswordCallback, publicKeyFileName string, plainTextFile string, cipherTextFile string) (err error) {
 
 	var signer *openpgp.Entity
-	if signer, err = readPrivateKeyFile(privateKeyFileName, readPass); err != nil {
+	if signer, err = ReadPrivateKeyFile(privateKeyFileName, readPass); err != nil {
 		return err
 	}
 
 	var recipients openpgp.EntityList
-	if recipients, err = readPublicKeyFile(publicKeyFileName); err != nil {
+	if recipients, err = ReadPublicKeyFile(publicKeyFileName); err != nil {
 		return err
 	}
 

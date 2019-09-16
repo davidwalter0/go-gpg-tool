@@ -10,7 +10,7 @@ import (
 func Sign(privateKeyFileName string, readPass readPasswordCallback, fileToSign string, signatureFile string) (err error) {
 
 	var signer *openpgp.Entity
-	if signer, err = readPrivateKeyFile(privateKeyFileName, readPass); err != nil {
+	if signer, err = ReadPrivateKeyFile(privateKeyFileName, readPass); err != nil {
 		return err
 	}
 

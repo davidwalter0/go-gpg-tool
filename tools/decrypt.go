@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -13,23 +15,26 @@ import (
 	openpgperrors "golang.org/x/crypto/openpgp/errors"
 )
 
+var cmdName = path.Base(os.Args[0])
+
+// Decrypt a file using the public key of the recipient
 func Decrypt(privateKeyFileName string, readPass readPasswordCallback, publicKeyFileName string, file string) (err error) {
 
 	if filepath.Ext(file) != ".pgp" {
-		return fmt.Errorf("quickpgp: filename to decrypt must end in .pgp")
+		return fmt.Errorf("%s: filename to decrypt must end in .pgp", cmdName)
 	}
 
 	var signer openpgp.EntityList
-	if signer, err = readPublicKeyFile(publicKeyFileName); err != nil {
+	if signer, err = ReadPublicKeyFile(publicKeyFileName); err != nil {
 		return err
 	}
 
 	var recipient *openpgp.Entity
-	if recipient, err = readPrivateKeyFile(privateKeyFileName, readPass); err != nil {
+	if recipient, err = ReadPrivateKeyFile(privateKeyFileName, readPass); err != nil {
 		return err
 	}
 	if recipient == nil {
-		return fmt.Errorf("quickpgp: unable to read %s", privateKeyFileName)
+		return fmt.Errorf("%s: unable to read %s", privateKeyFileName)
 	}
 
 	var keyring openpgp.EntityList
@@ -57,12 +62,25 @@ func Decrypt(privateKeyFileName string, readPass readPasswordCallback, publicKey
 		return err
 	}
 
+	for _, recipients := range md.EncryptedToKeyIds {
+		for _, key := range keyring.KeysById(recipients) {
+			if key.Entity != nil {
+				for k := range key.Entity.Identities {
+					log.Println(k)
+					// if v != nil {
+					// 	log.Println(v.Name)
+					// }
+				}
+			}
+		}
+	}
+
 	var cwd string
 	if cwd, err = os.Getwd(); err != nil {
 		return err
 	}
 	var plainTextOutput *os.File
-	if plainTextOutput, err = ioutil.TempFile(cwd, ".quickpgp."); err != nil {
+	if plainTextOutput, err = ioutil.TempFile(cwd, fmt.Sprintf(".%s.", cmdName)); err != nil {
 		return err
 	}
 	var cleanExit bool
@@ -86,14 +104,14 @@ func Decrypt(privateKeyFileName string, readPass readPasswordCallback, publicKey
 
 	bareFilename := strings.TrimSuffix(file, filepath.Ext(file))
 	if len(md.LiteralData.FileName) != 0 && md.LiteralData.FileName != bareFilename {
-		fmt.Fprintf(os.Stderr, "quickpgp: suggested filename \"%s\"\n", md.LiteralData.FileName)
+		fmt.Fprintf(os.Stderr, "%s: suggested filename \"%s\"\n", cmdName, md.LiteralData.FileName)
 	}
 	var finalFilename string
 	if _, err := os.Stat(bareFilename); os.IsNotExist(err) {
 		finalFilename = bareFilename
 	} else {
 		finalFilename = fmt.Sprintf("%s.%X", bareFilename, uint32(md.SignedByKeyId&0xffffffff))
-		fmt.Fprintf(os.Stderr, "quickpgp: \"%s\" exists, writing to \"%s\"\n", bareFilename, finalFilename)
+		fmt.Fprintf(os.Stderr, "%s: \"%s\" exists, writing to \"%s\"\n", cmdName, bareFilename, finalFilename)
 	}
 
 	err = os.Rename(plainTextOutput.Name(), finalFilename)

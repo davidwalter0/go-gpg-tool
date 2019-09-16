@@ -16,7 +16,7 @@ func Verify(publicKeyFileName string, fileToVerify string, sigFileName string) e
 	defer signed.Close()
 
 	var keyring openpgp.EntityList
-	if keyring, err = readPublicKeyFile(publicKeyFileName); err != nil {
+	if keyring, err = ReadPublicKeyFile(publicKeyFileName); err != nil {
 		return err
 	}
 

@@ -55,7 +55,9 @@ func GenerateKey(path string) (err error) {
 	var f *os.File
 	var e *openpgp.Entity
 	name, comment, email := entityData()
-	e, err = openpgp.NewEntity(name, comment, email, nil)
+	// config := &packet.Config{DefaultHash: packet.SHA3_512, DefaultCipher: packet.CipherAES256, RSABits: 4096, CompressionAlgo: packet.BestSpeed}
+	config := &packet.Config{RSABits: 4096, DefaultCompressionAlgo: packet.BestSpeed}
+	e, err = openpgp.NewEntity(name, comment, email, config)
 	if err != nil {
 		return err
 	}

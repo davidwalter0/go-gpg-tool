@@ -10,15 +10,18 @@ endef
 
 args:='-s -w -X main.Tag=$(shell $(tags)) -X main.Build=$(shell $(date)) -X main.Commit=$(shell $(commit))'
 
+all: get gpg-sign-tool
+
 .PHONY: get
 get:
 	GO111MODULE=on go get
 
+.PHONY: gpg-sign-tool
+gpg-sign-tool: bin/gpg-sign-tool
+
 bin/gpg-sign-tool: get $(shell find hostutils tools -type f -name "*.go")
-	GO111MODULE=on \
-	go build -tags netgo \
-		-ldflags $(args) \
-		-o $@ -v cmd/gpg-sign-tool/*.go
+	GO111MODULE=on go build -tags netgo -ldflags $(args) -o $@ -v cmd/gpg-sign-tool/*.go
+
 clean:
 	rm -f bin/gpg-sign-tool
 
